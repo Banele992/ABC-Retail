@@ -1,0 +1,76 @@
+﻿@model ABCRetail.Models.Product
+
+@{
+    ViewData["Title"] = "Add New Product";
+}
+
+<div class="d-flex align-items-center justify-content-center min-vh-100 bg-light">
+    <div class="col-lg-6 col-md-8 col-sm-10">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-success text-white text-center">
+                <h4 class="mb-0">Add New Product</h4>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Create" method="post" enctype="multipart/form-data">
+
+                    <!-- Product Image Upload -->
+                    <div class="mb-3 text-center">
+                        <label class="form-label d-block">Product Image</label>
+                        <img id="preview" src="~/images/default-product.png"
+                             class="rounded mb-3 border" width="140" height="140"
+                             style="object-fit: cover;" />
+                        <input type="file" name="photo" class="form-control"
+                               accept="image/*" onchange="previewImage(event)" />
+                    </div>
+
+                    <!-- Product Name -->
+                    <div class="form-floating mb-3">
+                        <input asp-for="ProductName" class="form-control" placeholder="Product Name" />
+                        <label asp-for="ProductName"></label>
+                        <span asp-validation-for="ProductName" class="text-danger"></span>
+                    </div>
+
+                    <!-- Price -->
+                    <div class="form-floating mb-3">
+                        <input asp-for="ProductPrice" type="number" step="0.01" class="form-control" placeholder="Price" />
+                        <label asp-for="ProductPrice"></label>
+                        <span asp-validation-for="ProductPrice" class="text-danger"></span>
+                    </div>
+
+                    <!-- Category -->
+                    <div class="form-floating mb-3">
+                        <input asp-for="ProductCategory" class="form-control" placeholder="Category" />
+                        <label asp-for="ProductCategory"></label>
+                        <span asp-validation-for="ProductCategory" class="text-danger"></span>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-floating mb-3">
+                        <textarea asp-for="ProductDescription" class="form-control" placeholder="Description"
+                                  style="height: 100px;"></textarea>
+                        <label asp-for="ProductDescription"></label>
+                        <span asp-validation-for="ProductDescription" class="text-danger"></span>
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success btn-lg">Create Product</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                var output = document.getElementById('preview');
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
+}

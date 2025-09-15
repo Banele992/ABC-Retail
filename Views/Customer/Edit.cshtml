@@ -1,0 +1,79 @@
+﻿@model ABCRetail.Models.Customer
+
+@{
+    ViewData["Title"] = "Edit Customer";
+}
+
+<div class="d-flex align-items-center justify-content-center min-vh-100 bg-light">
+    <div class="col-lg-6 col-md-8 col-sm-10">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-warning text-dark text-center">
+                <h4 class="mb-0">Edit Customer</h4>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                    <input type="hidden" asp-for="PartitionKey" />
+                    <input type="hidden" asp-for="RowKey" />
+
+                    <!-- Current Profile Picture -->
+                    <div class="mb-3 text-center">
+                        <img id="preview" src="@Model.CustPhoto"
+                             alt="@Model.Name"
+                             class="rounded-circle border mb-2"
+                             width="120" height="120"
+                             style="object-fit: cover;" />
+                        <input type="file" name="photo" class="form-control mt-2"
+                               accept="image/*" onchange="previewImage(event)" />
+                    </div>
+
+                    <!-- Name -->
+                    <div class="form-floating mb-3">
+                        <input asp-for="Name" class="form-control" placeholder="Full Name" />
+                        <label asp-for="Name"></label>
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-floating mb-3">
+                        <input asp-for="Email" type="email" class="form-control" placeholder="Email" />
+                        <label asp-for="Email"></label>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="form-floating mb-3">
+                        <input asp-for="PhoneNumber" class="form-control" placeholder="Phone Number" />
+                        <label asp-for="PhoneNumber"></label>
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="form-floating mb-3">
+                        <input asp-for="Address" class="form-control" placeholder="Address" />
+                        <label asp-for="Address"></label>
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+
+                    <!-- Save -->
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Index" class="btn btn-outline-secondary px-4">Back to List</a>
+                        <button type="submit" class="btn btn-primary px-4">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                var output = document.getElementById('preview');
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
+}

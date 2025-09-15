@@ -1,0 +1,45 @@
+﻿@model ABCRetail.Models.Customer
+
+@{
+    ViewData["Title"] = "Customer Details";
+}
+
+<div class="d-flex align-items-center justify-content-center min-vh-100 bg-light">
+    <div class="col-lg-6 col-md-8 col-sm-10">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white text-center">
+                <h4 class="mb-0">Customer Details</h4>
+            </div>
+            <div class="card-body text-center">
+
+                <!-- Profile Picture -->
+                <div class="mb-3">
+                    <img src="@Model.CustPhoto" alt="@Model.Name"
+                         class="rounded-circle border" width="140" height="140"
+                         style="object-fit: cover;" />
+                </div>
+
+                <!-- Customer Info -->
+                <ul class="list-group list-group-flush text-start mb-4">
+                    <li class="list-group-item"><strong>Name:</strong> @Model.Name</li>
+                    <li class="list-group-item"><strong>Email:</strong> @Model.Email</li>
+                    <li class="list-group-item"><strong>Telephone:</strong> @Model.PhoneNumber</li>
+                    <li class="list-group-item"><strong>Address:</strong> @Model.Address</li>
+                </ul>
+
+                <!-- Actions -->
+                <div class="d-flex justify-content-center gap-3">
+                    <a asp-action="Edit"
+                       asp-route-partitionKey="@Model.PartitionKey"
+                       asp-route-rowKey="@Model.RowKey"
+                       class="btn btn-warning px-4">
+                        Edit
+                    </a>
+                    <a asp-action="Index" class="btn btn-outline-secondary px-4">
+                        Back to List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

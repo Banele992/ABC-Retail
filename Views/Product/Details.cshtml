@@ -1,0 +1,40 @@
+﻿@* /**
+ * This method was adapted from The IIE 2024
+ * Authour: Isaac Leshaba
+ * Link: https://myvc.iielearn.ac.za/ultra/courses/_223566_1/cl/outline 
+ */ *@
+
+@model ABCRetail.Models.Product
+
+@{
+    ViewData["Title"] = "Product Details";
+}
+
+<h2>Product Details</h2>
+
+<div>
+    <h4>Product</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">Profile Picture</dt>
+        <dd class="col-sm-10"><img src=@Model.ProductImage alt=@Model.ProductName</dd>       
+
+        <dt class="col-sm-2">Name</dt>
+        <dd class="col-sm-10">@Model.ProductName</dd>
+
+        <dt class="col-sm-2">Price</dt>
+        <dd class="col-sm-10">@Model.ProductPrice</dd>
+
+        <dt class="col-sm-2">Description</dt>
+        <dd class="col-sm-10">@Model.ProductDescription</dd> 
+
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-partitionKey="@Model.PartitionKey" asp-route-rowKey="@Model.RowKey">Edit</a> 
+    <a asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@Model.PartitionKey" class="btn btn-primary">Add to Cart</a>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+
+

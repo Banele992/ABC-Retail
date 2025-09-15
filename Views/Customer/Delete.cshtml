@@ -1,0 +1,44 @@
+﻿@model ABCRetail.Models.Customer
+
+@{
+    ViewData["Title"] = "Delete Customer";
+}
+
+<div class="d-flex align-items-center justify-content-center min-vh-100 bg-light">
+    <div class="col-lg-6 col-md-8 col-sm-10">
+        <div class="card shadow border-0">
+            <div class="card-header bg-danger text-white text-center">
+                <h4 class="mb-0">Delete Customer</h4>
+            </div>
+            <div class="card-body text-center">
+                <h5 class="mb-3">Are you sure you want to delete this customer?</h5>
+
+                <!-- Profile Picture -->
+                <div class="mb-3">
+                    <img src="@Model.CustPhoto" alt="@Model.Name"
+                         class="rounded-circle border" width="120" height="120"
+                         style="object-fit: cover;" />
+                </div>
+
+                <!-- Customer Details -->
+                <ul class="list-group list-group-flush text-start mb-4">
+                    <li class="list-group-item"><strong>Name:</strong> @Model.Name</li>
+                    <li class="list-group-item"><strong>Email:</strong> @Model.Email</li>
+                    <li class="list-group-item"><strong>Phone:</strong> @Model.PhoneNumber</li>
+                    <li class="list-group-item"><strong>Address:</strong> @Model.Address</li>
+                </ul>
+
+                <!-- Confirmation Buttons -->
+                <form asp-action="Delete" method="post">
+                    <input type="hidden" asp-for="PartitionKey" />
+                    <input type="hidden" asp-for="RowKey" />
+
+                    <div class="d-flex justify-content-center gap-3">
+                        <button type="submit" class="btn btn-danger px-4">Yes, Delete</button>
+                        <a asp-action="Index" class="btn btn-outline-secondary px-4">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

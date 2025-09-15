@@ -1,0 +1,365 @@
+﻿
+@model IEnumerable<ABCRetail.Models.Product>
+
+<div class="container-fluid py-4" style="margin-top: 0; padding-top: 20px;">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-2 text-gray-800">Product Management</h1>
+            <p class="text-muted mb-0">Manage your product inventory</p>
+        </div>
+        <div class="btn-group" role="group">
+            <a class="btn btn-primary btn-lg shadow-sm" asp-action="Create">
+                <i class="fas fa-plus-circle me-2"></i>Add New Product
+            </a>
+            <a class="btn btn-outline-info btn-lg shadow-sm" asp-action="Log">
+                <i class="fas fa-history me-2"></i>View Log
+            </a>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Products</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.Count()</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-boxes fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Categories</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.Select(p => p.ProductCategory).Distinct().Count()</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-tags fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>   
+    </div>
+
+    <!-- Product Table -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 bg-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h6 class="m-0 font-weight-bold text-primary">Product Catalog</h6>
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown">
+                        <i class="fas fa-filter me-1"></i>Filter
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#" onclick="filterTable('all')">All Products</a></li>
+                        @foreach (var category in Model.Select(p => p.ProductCategory).Distinct().OrderBy(c => c))
+                        {
+                            <li><a class="dropdown-item" href="#" onclick="filterByCategory('@category')">@category</a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0" id="productTable">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="border-0 text-center" width="100">Image</th>
+                            <th class="border-0">Product Details</th>
+                            <th class="border-0">Category</th>
+                            <th class="border-0">Price</th>
+                            <th class="border-0">Description</th>
+                            <th class="border-0 text-center" width="200">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var product in Model)
+                        {
+                            <tr class="product-row" data-category="@product.ProductCategory">
+                                <td class="text-center align-middle">
+                                    <div class="product-image-container">
+                                        <img src="@product.ProductImage"
+                                             alt="@product.ProductName"
+                                             class="product-image shadow-sm"
+                                             onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjRjBGMEYwIiByeD0iOCIvPgo8cGF0aCBkPSJNMjAgMjBINDRWNDRIMjBWMjBaIiBzdHJva2U9IiM5Q0EzQUYiIHN0cm9rZS13aWR0aD0iMiIgZmlsbD0ibm9uZSIvPgo8Y2lyY2xlIGN4PSIyOCIgY3k9IjI4IiByPSIzIiBmaWxsPSIjOUNBM0FGIi8+CjxwYXRoIGQ9Im0yMCAzNiA0LTQgNC4wMyA0LjAzIEw0MCAyNCIgc3Ryb2tlPSIjOUNBM0FGIiBzdHJva2Utd2lkdGg9IjIiIGZpbGw9Im5vbmUiLz4KPC9zdmc+'">
+                                    </div>
+                                </td>
+                                <td class="align-middle">
+                                    <div class="product-info">
+                                        <h6 class="mb-1 fw-bold">@product.ProductName</h6>
+                                        <small class="text-muted">Product ID: @product.RowKey</small>
+                                    </div>
+                                </td>
+                                <td class="align-middle">
+                                    <span class="badge bg-primary rounded-pill">@product.ProductCategory</span>
+                                </td>
+                                <td class="align-middle">
+                                    <div class="price-info">
+                                        <span class="fw-bold text-success fs-5">R @string.Format("{0:F2}", Convert.ToDecimal(product.ProductPrice))</span>
+                                    </div>
+                                </td>
+                                <td class="align-middle">
+                                    <div class="description-info">
+                                        <span class="text-muted">
+                                            @(product.ProductDescription?.Length > 50
+                                                                                    ? product.ProductDescription.Substring(0, 50) + "..."
+                                                                                    : product.ProductDescription)
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="text-center align-middle">
+                                <div class="btn-group-vertical btn-group-sm d-md-none" role="group">
+                                    <a asp-action="Details"
+                                       asp-route-partitionKey="@product.PartitionKey"
+                                       asp-route-rowKey="@product.RowKey"
+                                       class="btn btn-outline-info btn-sm mb-1"
+                                       title="View Details">
+                                        <i class="fas fa-eye me-1"></i>Details
+                                    </a>
+                                    <a asp-action="Edit"
+                                       asp-route-partitionKey="@product.PartitionKey"
+                                       asp-route-rowKey="@product.RowKey"
+                                       class="btn btn-outline-warning btn-sm mb-1"
+                                       title="Edit Product">
+                                        <i class="fas fa-edit me-1"></i>Edit
+                                    </a>
+                                    <a asp-action="Delete"
+                                       asp-route-partitionKey="@product.PartitionKey"
+                                       asp-route-rowKey="@product.RowKey"
+                                       class="btn btn-outline-danger btn-sm"
+                                       title="Delete Product"
+                                       onclick="return confirm('Are you sure you want to delete this product?')">
+                                        <i class="fas fa-trash me-1"></i>Delete
+                                    </a>
+                                </div>
+
+                                    <div class="btn-group btn-group-sm d-none d-md-flex" role="group">
+                                        <a asp-action="Details"
+                                           asp-route-partitionKey="@product.PartitionKey"
+                                           asp-route-rowKey="@product.RowKey"
+                                           class="btn btn-outline-info btn-sm"
+                                           title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                            <span class="d-none d-lg-inline ms-1">Details</span>
+                                        </a>
+                                        <a asp-action="Edit"
+                                           asp-route-partitionKey="@product.PartitionKey"
+                                           asp-route-rowKey="@product.RowKey"
+                                           class="btn btn-outline-warning btn-sm"
+                                           title="Edit Product">
+                                            <i class="fas fa-edit"></i>
+                                            <span class="d-none d-lg-inline ms-1">Edit</span>
+                                        </a>
+                                        <a asp-action="Delete"
+                                           asp-route-partitionKey="@product.PartitionKey"
+                                           asp-route-rowKey="@product.RowKey"
+                                           class="btn btn-outline-danger btn-sm"
+                                           title="Delete Product"
+                                           onclick="return confirm('Are you sure you want to delete this product?')">
+                                            <i class="fas fa-trash"></i>
+                                            <span class="d-none d-lg-inline ms-1">Delete</span>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                                                }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+            <div class="mb-4">
+                <i class="fas fa-boxes fa-5x text-muted"></i>
+            </div>
+            <h4 class="text-muted">No Products Found</h4>
+            <p class="text-muted mb-4">Get started by adding your first product to the catalog.</p>
+            <a class="btn btn-primary btn-lg" asp-action="Create">
+                <i class="fas fa-plus-circle me-2"></i>Add First Product
+            </a>
+        </div>
+    }
+</div>
+
+<style>
+    .main-content {
+        margin-top: 0;
+        padding-top: 20px;
+    }
+
+    /* Override any conflicting navbar styles */
+    .navbar-fixed-top,
+    .navbar-static-top {
+        position: relative !important;
+    }
+
+    .border-left-primary {
+        border-left: 0.25rem solid #4e73df !important;
+    }
+
+    .border-left-success {
+        border-left: 0.25rem solid #1cc88a !important;
+    }
+
+    .border-left-info {
+        border-left: 0.25rem solid #36b9cc !important;
+    }
+
+    .product-image {
+        width: 64px;
+        height: 64px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 2px solid #e3e6f0;
+    }
+
+    .product-image-container {
+        position: relative;
+        display: inline-block;
+    }
+
+    .product-info h6 {
+        color: #5a5c69;
+        font-size: 1rem;
+    }
+
+    .price-info {
+        color: #1cc88a;
+        font-weight: 600;
+    }
+
+    .description-info {
+        color: #5a5c69;
+        font-size: 0.875rem;
+        max-width: 200px;
+    }
+
+    .product-row:hover {
+        background-color: #f8f9fc;
+        transform: translateY(-1px);
+        transition: all 0.15s ease-in-out;
+    }
+
+    .btn-group-sm .btn {
+        border-radius: 0.35rem;
+        margin: 0 1px;
+    }
+
+    .card {
+        border: none;
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
+    }
+
+    .table th {
+        font-weight: 600;
+        color: #5a5c69;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+    }
+
+    /* Category badges */
+    .badge {
+        font-size: 0.75rem;
+        padding: 0.5rem 0.75rem;
+    }
+
+  
+    .btn-group .btn {
+        margin-bottom: 0.5rem;
+    }
+
+    .product-info, .description-info {
+        font-size: 0.8rem;
+    }
+
+    .container-fluid {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .product-image {
+        width: 48px;
+        height: 48px;
+    }
+
+    }
+
+    /* Loading animation for images */
+    .product-image {
+        animation: fadeIn 0.5s ease-in;
+    }
+
+     to {
+        opacity: 1;
+    }
+
+    }
+
+    /* Enhanced button styles */
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+    }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+    .shadow-sm {
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+    }
+
+    /* Price styling */
+    .text-success {
+        color: #1cc88a !important;
+    }
+</style>
+
+<script>
+    // Filter functionality
+    function filterTable(filter) {
+        const rows = document.querySelectorAll('.product-row');
+
+        rows.forEach(row => {
+            if (filter === 'all') {
+                row.style.display = '';
+            }
+        });
+    }
+
+    function filterByCategory(category) {
+        const rows = document.querySelectorAll('.product-row');
+
+        rows.forEach(row => {
+            const productCategory = row.getAttribute('data-category');
+            if (productCategory === category) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+
+    // Search functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        // You can add search functionality here if needed
+        console.log('Product management page loaded');
+    });
+</script>

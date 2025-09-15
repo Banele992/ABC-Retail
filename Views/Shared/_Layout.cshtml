@@ -1,0 +1,605 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ABC Retail</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ABCRetail.styles.css" asp-append-version="true" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="main-header">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <div class="contact-info">
+                            <span class="me-3"><i class="fas fa-phone me-1"></i> +27 11 123 4567</span>
+                            <span><i class="fas fa-envelope me-1"></i> info@abcretail.co.za</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <div class="top-links">
+                            <a href="#" class="me-3"><i class="fas fa-user me-1"></i> My Account</a>
+                            <a class="text-decoration-none" asp-controller="ShoppingCart" asp-action="ViewCart">
+                                <i class="fas fa-shopping-cart me-1"></i> Cart (<span id="cart-count">0</span>)
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Navigation -->
+        <nav class="navbar navbar-expand-lg main-nav">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <div class="brand-container">
+                        <div class="brand-icon">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <div class="brand-text">
+                            <span class="brand-name">ABC Retail</span>
+                            <small class="brand-tagline">Books & Stationery</small>
+                        </div>
+                    </div>
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="fas fa-home me-1"></i> Home
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="productsDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-box me-1"></i> Products
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Product" asp-action="Index">
+                                        <i class="fas fa-list me-2"></i> All Products
+                                    </a>
+                                </li>                              
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Product" asp-action="Create">
+                                        <i class="fas fa-plus me-2"></i> Add Product
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="customersDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-users me-1"></i> Customers
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Customer" asp-action="Index">
+                                        <i class="fas fa-list me-2"></i> All Customers
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Customer" asp-action="Create">
+                                        <i class="fas fa-user-plus me-2"></i> Add Customer
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Customer" asp-action="Log">
+                                        <i class="fas fa-history me-2"></i> Customer Log
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">
+                                <i class="fas fa-info-circle me-1"></i> About
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Contact">
+                                <i class="fas fa-envelope me-1"></i> Contact
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="navbar-nav ms-auto">
+                        <div class="search-container">
+                            <form class="d-flex" role="search">
+                                <input class="form-control me-2 search-input" type="search" placeholder="Search products..." aria-label="Search">
+                                <button class="btn btn-search" type="submit">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Breadcrumb (Show on non-home pages) -->
+    @if (ViewContext.RouteData.Values["action"]?.ToString() != "Index" || ViewContext.RouteData.Values["controller"]?.ToString() != "Home")
+    {
+        <nav class="breadcrumb-nav">
+            <div class="container-fluid">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a asp-controller="Home" asp-action="Index">
+                                <i class="fas fa-home me-1"></i> Home
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Index">
+                                @ViewContext.RouteData.Values["controller"]
+                            </a>
+                        </li>
+                        @if (ViewContext.RouteData.Values["action"]?.ToString() != "Index")
+                        {
+                            <li class="breadcrumb-item active" aria-current="page">
+                                @ViewContext.RouteData.Values["action"]
+                            </li>
+                        }
+                    </ol>
+                </nav>
+            </div>
+        </nav>
+    }
+
+    <!-- Main Content -->
+    <div class="main-content">
+        @RenderBody()
+    </div>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="footer-section">
+                            <h5 class="footer-title">ABC Retail</h5>
+                            <p class="footer-description">
+                                Your trusted partner for quality books and stationery supplies.
+                                Serving customers across South Africa with premium products and exceptional service.
+                            </p>
+                            <div class="social-links">
+                                <a href="#"><i class="fab fa-facebook"></i></a>
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                                <a href="#"><i class="fab fa-instagram"></i></a>
+                                <a href="#"><i class="fab fa-linkedin"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-6 mb-4">
+                        <div class="footer-section">
+                            <h6 class="footer-subtitle">Quick Links</h6>
+                            <ul class="footer-links">
+                                <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+                                <li><a asp-controller="Product" asp-action="Index">Products</a></li>
+                                <li><a asp-controller="Home" asp-action="About">About Us</a></li>
+                                <li><a asp-controller="Home" asp-action="Contact">Contact</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-6 mb-4">
+                        <div class="footer-section">
+                            <h6 class="footer-subtitle">Categories</h6>
+                            <ul class="footer-links">
+                                <li><a href="#">Books</a></li>
+                                <li><a href="#">Stationery</a></li>
+                                <li><a href="#">Office Supplies</a></li>
+                                <li><a href="#">Art Materials</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="footer-section">
+                            <h6 class="footer-subtitle">Contact Info</h6>
+                            <div class="contact-item">
+                                <i class="fas fa-map-marker-alt me-2"></i>
+                                <span>123 Main Street, Johannesburg, 2000</span>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-phone me-2"></i>
+                                <span>+27 11 123 4567</span>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-envelope me-2"></i>
+                                <span>info@abcretail.co.za</span>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-clock me-2"></i>
+                                <span>Mon - Fri: 8:00 AM - 6:00 PM</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <p class="copyright">
+                            &copy; 2024 ABC Retail. All rights reserved.
+                        </p>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <div class="footer-links">
+                            <a asp-controller="Home" asp-action="Privacy">Privacy Policy</a>
+                            <a href="#">Terms of Service</a>
+                            <a href="#">Returns Policy</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        // Initialize layout features
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add active class to current nav item
+            const currentPath = window.location.pathname.toLowerCase();
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            navLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href && currentPath.includes(href.toLowerCase()) && href !== '/') {
+                    link.classList.add('active');
+                }
+            });
+
+            // Search functionality
+            const searchForm = document.querySelector('form[role="search"]');
+            if (searchForm) {
+                searchForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const searchInput = this.querySelector('input[type="search"]');
+                    const searchTerm = searchInput.value.trim();
+                    if (searchTerm) {
+                        // Redirect to product search (you can implement this route)
+                        window.location.href = `/Product?search=${encodeURIComponent(searchTerm)}`;
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background-color: #f8f9fa;
+    }
+
+    /* Top Bar */
+    .top-bar {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 8px 0;
+        font-size: 0.875rem;
+    }
+
+    .contact-info span,
+    .top-links a {
+        color: white;
+        text-decoration: none;
+        transition: opacity 0.3s ease;
+    }
+
+    .contact-info span {
+        opacity: 0.9;
+    }
+
+    .top-links a:hover {
+        opacity: 0.8;
+    }
+
+    /* Main Header */
+    .main-header {
+        background: white;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+
+    .main-nav {
+        padding: 1rem 0;
+    }
+
+    /* Brand */
+    .brand-container {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .brand-icon {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+    }
+
+    .brand-text {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .brand-name {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #333;
+        line-height: 1;
+    }
+
+    .brand-tagline {
+        font-size: 0.75rem;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Navigation */
+    .navbar-nav .nav-link {
+        color: #333 !important;
+        font-weight: 500;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        margin: 0 4px;
+    }
+
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white !important;
+        }
+
+    /* Dropdown */
+    .dropdown-menu {
+        border: none;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        border-radius: 12px;
+        padding: 1rem 0;
+        margin-top: 8px;
+    }
+
+    .dropdown-item {
+        padding: 0.75rem 1.5rem;
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+
+        .dropdown-item:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+    /* Search */
+    .search-container {
+        margin-left: 2rem;
+    }
+
+    .search-input {
+        border-radius: 25px;
+        border: 2px solid #e3e6f0;
+        padding: 0.5rem 1rem;
+        transition: all 0.3s ease;
+    }
+
+        .search-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+
+    .btn-search {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 25px;
+        padding: 0.5rem 1rem;
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+        .btn-search:hover {
+            background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+            transform: translateY(-1px);
+        }
+
+    /* Breadcrumb */
+    .breadcrumb-nav {
+        background: #f8f9fa;
+        padding: 1rem 0;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .breadcrumb {
+        background: none;
+        margin-bottom: 0;
+        padding: 0;
+    }
+
+    .breadcrumb-item a {
+        color: #667eea;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+        .breadcrumb-item a:hover {
+            color: #5a6fd8;
+        }
+
+    .breadcrumb-item.active {
+        color: #6c757d;
+    }
+
+    /* Main Content */
+    .main-content {
+        min-height: calc(100vh - 200px);
+    }
+
+    /* Footer */
+    .main-footer {
+        background: #2c3e50;
+        color: white;
+        margin-top: 4rem;
+    }
+
+    .footer-top {
+        padding: 3rem 0;
+    }
+
+    .footer-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: white;
+    }
+
+    .footer-subtitle {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: #ecf0f1;
+    }
+
+    .footer-description {
+        color: #bdc3c7;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+    }
+
+    .footer-links {
+        list-style: none;
+        padding: 0;
+    }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+            .footer-links a:hover {
+                color: white;
+            }
+
+    .contact-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.75rem;
+        color: #bdc3c7;
+    }
+
+        .contact-item i {
+            color: #667eea;
+            width: 20px;
+        }
+
+    .social-links {
+        margin-top: 1rem;
+    }
+
+        .social-links a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: #34495e;
+            color: white;
+            text-align: center;
+            line-height: 40px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+            .social-links a:hover {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                transform: translateY(-2px);
+            }
+
+    .footer-bottom {
+        background: #34495e;
+        padding: 1.5rem 0;
+        border-top: 1px solid #4a5f7a;
+    }
+
+    .copyright {
+        margin: 0;
+        color: #bdc3c7;
+    }
+
+    .footer-bottom .footer-links a {
+        color: #bdc3c7;
+        text-decoration: none;
+        margin-left: 1rem;
+        transition: color 0.3s ease;
+    }
+
+        .footer-bottom .footer-links a:hover {
+            color: white;
+        }
+
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 4px;
+    }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+        }
+</style>

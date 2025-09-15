@@ -1,0 +1,70 @@
+﻿@model ABCRetail.Models.Customer
+
+<div class="d-flex align-items-center justify-content-center min-vh-100 bg-light">
+    <div class="col-lg-5 col-md-7 col-sm-10">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white text-center">
+                <h4 class="mb-0">Add New Customer</h4>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Create" method="post" enctype="multipart/form-data">
+
+                    <!-- Profile Picture Upload -->
+                    <div class="mb-3 text-center">
+                        <label class="form-label d-block">Profile Picture</label>
+                        <img id="preview" src="~/images/default-avatar.png"
+                             class="rounded-circle mb-3 border" width="120" height="120" style="object-fit: cover;" />
+                        <input type="file" name="photo" class="form-control"
+                               accept="image/*" onchange="previewImage(event)" />
+                    </div>
+
+                    <!-- Name -->
+                    <div class="form-floating mb-3">
+                        <input asp-for="Name" class="form-control" placeholder="Full Name" />
+                        <label asp-for="Name"></label>
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-floating mb-3">
+                        <input asp-for="Email" type="email" class="form-control" placeholder="Email" />
+                        <label asp-for="Email"></label>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="form-floating mb-3">
+                        <input asp-for="PhoneNumber" class="form-control" placeholder="Phone Number" />
+                        <label asp-for="PhoneNumber"></label>
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="form-floating mb-3">
+                        <input asp-for="Address" class="form-control" placeholder="Address" />
+                        <label asp-for="Address"></label>
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success btn-lg">Create Customer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function(){
+                var output = document.getElementById('preview');
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
+}
